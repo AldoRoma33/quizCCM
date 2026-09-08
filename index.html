@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Five Situations — an intercultural quiz</title>
+<meta name="description" content="Five short workplace situations involving North Americans and Europeans. Four options each, one clearly best.">
+<!-- To publish on GitHub Pages: rename this file index.html, put it at the root of the
+     repository (or in /docs), then Settings > Pages > choose the branch as source. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,500;1,7..72,400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ground:#E8EAE5;
+    --card:#FFFFFF;
+    --ink:#1D2321;
+    --ink-soft:#4C5854;
+    --line:#CFD4CD;
+    --line-faint:#E2E5E0;
+    --band:#2F4B7C;
+    --best:#2E6B4F;
+    --best-bg:#E7F0EA;
+    --ok:#A9791C;
+    --ok-bg:#F7EFDD;
+    --poor:#9E4034;
+    --poor-bg:#F6E7E4;
+    --ui:"Familjen Grotesk",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    --prose:"Literata",Georgia,serif;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{background:var(--ground);color:var(--ink);font-family:var(--prose);font-size:17px;line-height:1.62;-webkit-font-smoothing:antialiased}
+  .page{max-width:720px;margin:0 auto;padding:28px 20px 80px}
+
+  /* ---------- top ---------- */
+  .top h1{font-family:var(--ui);font-weight:700;font-size:clamp(28px,6vw,40px);line-height:1.08;letter-spacing:-.02em;margin:0 0 8px}
+  .top p{margin:0;color:var(--ink-soft);font-size:16.5px;max-width:56ch}
+  .meter{display:flex;align-items:center;gap:10px;margin:22px 0 0;flex-wrap:wrap}
+  .clips{display:flex;gap:6px}
+  .clip{width:34px;height:9px;background:var(--line);border-radius:1px}
+  .clip.on{background:var(--band)}
+  .tally{font-family:var(--ui);font-weight:600;font-size:15px;margin-left:auto}
+  .tally span{color:var(--ink-soft);font-weight:400}
+
+  /* ---------- card ---------- */
+  .card{background:var(--card);border:1px solid var(--line);margin-top:20px;padding:0 0 26px}
+  .badge{
+    width:min(280px,84%);margin:22px 0 20px 22px;border:1px solid var(--line);
+    background:#FCFCFB;transform:rotate(-1.1deg);position:relative;
+  }
+  .badge .band{background:var(--band);height:34px;display:flex;align-items:center;padding:0 12px}
+  .badge .band b{font-family:var(--ui);font-weight:600;font-size:12.5px;color:#fff;letter-spacing:.04em}
+  .badge .hole{position:absolute;top:10px;right:12px;width:26px;height:7px;border-radius:4px;background:var(--ground);border:1px solid rgba(0,0,0,.18)}
+  .badge .who{padding:11px 12px 13px}
+  .badge .who strong{display:block;font-family:var(--ui);font-weight:700;font-size:21px;line-height:1.15;letter-spacing:-.01em}
+  .badge .who em{display:block;font-style:normal;font-family:var(--ui);font-size:14px;color:var(--ink-soft);margin-top:1px}
+  .card .body{padding:0 26px}
+  @media(max-width:560px){.card .body{padding:0 18px}.badge{margin-left:18px}}
+  .scene{margin:0 0 6px;font-size:17.5px}
+  .ask{font-family:var(--ui);font-weight:600;font-size:18.5px;margin:20px 0 12px}
+
+  /* ---------- options ---------- */
+  .opts{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+  .opt{
+    display:block;width:100%;text-align:left;cursor:pointer;background:var(--card);
+    border:1px solid var(--line);border-left:4px solid var(--line);
+    padding:13px 15px;font-family:var(--prose);font-size:16.5px;line-height:1.5;color:var(--ink);
+  }
+  .opt:hover:not(:disabled){border-color:var(--ink);border-left-color:var(--ink)}
+  .opt:focus-visible{outline:2px solid var(--band);outline-offset:2px}
+  .opt:disabled{cursor:default}
+  .opt.dim{opacity:.45}
+  .opt.chosen.best{border-color:var(--best);border-left-color:var(--best);background:var(--best-bg)}
+  .opt.chosen.ok{border-color:var(--ok);border-left-color:var(--ok);background:var(--ok-bg)}
+  .opt.chosen.poor{border-color:var(--poor);border-left-color:var(--poor);background:var(--poor-bg)}
+
+  .verdict{margin-top:16px;padding:14px 16px;border:1px solid var(--line)}
+  .verdict.best{border-color:var(--best);background:var(--best-bg)}
+  .verdict.ok{border-color:var(--ok);background:var(--ok-bg)}
+  .verdict.poor{border-color:var(--poor);background:var(--poor-bg)}
+  .verdict .line{font-family:var(--ui);font-weight:700;font-size:15px;margin-bottom:5px}
+  .verdict.best .line{color:var(--best)}
+  .verdict.ok .line{color:var(--ok)}
+  .verdict.poor .line{color:var(--poor)}
+  .verdict p{margin:0;font-size:16px}
+  .verdict .also{margin-top:9px;padding-top:9px;border-top:1px solid rgba(0,0,0,.10);font-size:15.5px;color:var(--ink-soft)}
+
+  .go{
+    display:inline-block;margin-top:18px;cursor:pointer;font-family:var(--ui);font-weight:600;font-size:16px;
+    background:var(--ink);color:#fff;border:1px solid var(--ink);padding:11px 20px;
+  }
+  .go:hover{background:var(--band);border-color:var(--band)}
+  .go:focus-visible{outline:2px solid var(--band);outline-offset:2px}
+  .go.quiet{background:transparent;color:var(--ink);border-color:var(--line)}
+  .go.quiet:hover{background:#fff;border-color:var(--ink)}
+
+  /* ---------- results ---------- */
+  .final .headline{font-family:var(--ui);font-weight:700;font-size:clamp(30px,7vw,44px);letter-spacing:-.02em;margin:0}
+  .final .headline span{color:var(--ink-soft);font-weight:400;font-size:.5em}
+  .final .verdictline{margin:8px 0 0;font-size:17px;max-width:56ch}
+  .rev{border-top:1px solid var(--line);padding:18px 0 4px}
+  .rev h3{font-family:var(--ui);font-weight:600;font-size:17px;margin:0 0 3px}
+  .rev .place{font-family:var(--ui);font-size:13.5px;color:var(--ink-soft);margin:0 0 10px}
+  .rev ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:7px}
+  .rev li{border-left:4px solid var(--line);padding:7px 0 7px 12px;font-size:15.5px}
+  .rev li.best{border-left-color:var(--best)}
+  .rev li.ok{border-left-color:var(--ok)}
+  .rev li.poor{border-left-color:var(--poor)}
+  .rev li b{font-family:var(--ui);font-weight:600;font-size:12.5px;display:block;color:var(--ink-soft)}
+  .rev li.picked b::after{content:" — your answer";color:var(--ink)}
+  .rev li em{font-style:normal;color:var(--ink-soft);display:block;margin-top:3px;font-size:15px}
+  .foot{margin-top:34px;padding-top:16px;border-top:1px solid var(--line);font-size:14px;color:var(--ink-soft)}
+  @media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="page">
+  <header class="top">
+    <h1>Five situations</h1>
+    <p>Five short moments at work, each with someone from one side of the Atlantic and someone from the other. Pick what you would do. One option is clearly best, one is workable, two will cost you something.</p>
+    <div class="meter">
+      <div class="clips" id="clips" aria-hidden="true"></div>
+      <div class="tally" id="tally">0 <span>/ 10</span></div>
+    </div>
+  </header>
+  <main id="stage"></main>
+  <p class="foot">Adapted by the international exchange programmes of Lycée Brémontier, Bordeaux, from the culture-assimilator method of K. Cushner &amp; R. W. Brislin, <em>Intercultural Interactions: A Practical Guide</em> (SAGE, 1995). These are general tendencies, not rules about individuals.</p>
+</div>
+
+<script>
+const QUESTIONS = [
+  {
+    name:"Léa Berger", role:"Intern, marketing", place:"Boston, USA", tag:"Visitor",
+    scene:"Léa is three weeks into an internship in Boston. In the launch meeting she notices that the delivery date cannot work with the printer's lead time. Her manager finishes her slide and asks the room: “Any thoughts?” Léa would rather check her figures and send a clear written note that evening.",
+    ask:"What should Léa do?",
+    options:[
+      {tier:"best", text:"Say it in the meeting, even if her English is not perfect and her figures are not final.",
+       why:"In an American meeting, “any thoughts?” is a real invitation and the room expects someone to take it. Speaking up is read as engagement, not as showing off — and an unfinished idea said out loud is worth more than a perfect one said too late."},
+      {tier:"ok", text:"Say one sentence in the meeting to flag the problem, then send the detailed note that evening.",
+       why:"This works. The flag is on the record and the detail follows, which is a sensible compromise for someone still unsure of her English."},
+      {tier:"poor", text:"Say nothing, and send a well-argued note to her manager that evening.",
+       why:"The note is excellent and arrives after the decision. Worse, staying silent when the floor was opened is read as having nothing to contribute."},
+      {tier:"poor", text:"Say nothing, and mention it afterwards to another intern who might know what to do.",
+       why:"The one person who could act on it never hears it, and a solvable scheduling problem turns into corridor talk."}
+    ]
+  },
+  {
+    name:"Ryan Doyle", role:"Intern, logistics", place:"Lyon, France", tag:"Day 1",
+    scene:"Ryan, a Canadian student, starts his internship in Lyon. His manager calls him “vous”. Nobody offers him a tour of the building. At 12:30 the whole team stands up and leaves for lunch together without saying anything to him.",
+    ask:"What should Ryan do?",
+    options:[
+      {tier:"poor", text:"Eat at his desk all week and conclude that the team does not want him there.",
+       why:"He is reading a habit as a rejection. The team goes to lunch at 12:30 every day and simply did not think about it — which is careless, but it is not hostility."},
+      {tier:"best", text:"Ask a colleague directly whether he can come along tomorrow.",
+       why:"French teams often assume a newcomer will ask for what he needs. Asking is normal, it costs nothing, and in most offices the answer is an immediate yes."},
+      {tier:"poor", text:"Start saying “tu” to everyone, including his manager, to make the atmosphere friendlier.",
+       why:"“Vous” at the start is a form of respect, not distance, and it usually relaxes on its own. Deciding on his own to switch reads as over-familiarity rather than warmth."},
+      {tier:"ok", text:"Wait a few days to see whether he is invited, and ask if nothing happens.",
+       why:"Reasonable and a little passive. He loses his first week, which is exactly when a newcomer is easiest to include."}
+    ]
+  },
+  {
+    name:"Kevin Alvarez", role:"Analyst", place:"Dublin, Ireland", tag:"Thursday",
+    scene:"Five colleagues take Kevin, who has just arrived from Chicago, to the pub after work. The first colleague goes to the bar and comes back with drinks for all six. Kevin has his card out and wants to pay for his own.",
+    ask:"What should Kevin do?",
+    options:[
+      {tier:"ok", text:"Accept the drink and immediately offer to buy the next round.",
+       why:"Fine, and slightly eager. Settling up straight away can look like closing an account rather than joining a group, but nobody will hold it against him."},
+      {tier:"poor", text:"Accept the drinks all evening and leave after the third round without buying one.",
+       why:"This is the one real breach of the evening. It will be noticed, it will be remembered, and nobody will ever mention it to him."},
+      {tier:"best", text:"Accept the drink, and buy the whole round himself when his turn comes.",
+       why:"A round is a small chain of obligations that keeps the group together for the evening. Taking your turn is the entire point of the system — and over a few rounds everyone pays roughly the same."},
+      {tier:"poor", text:"Insist on paying for his own drink every time, so that nobody is out of pocket.",
+       why:"Fair in intention, and it quietly removes him from the group: he has arranged never to owe anyone anything, which is the opposite of what the round is for."}
+    ]
+  },
+  {
+    name:"Megan Ross", role:"Buyer", place:"Milan, Italy", tag:"Supplier visit",
+    scene:"Megan's Italian supplier has booked a two-hour lunch. Forty minutes in, they have talked about the region, the restaurant and his daughter's studies, and not once about the contract. Megan has three points to settle and a flight at six.",
+    ask:"What should Megan do?",
+    options:[
+      {tier:"poor", text:"Open her laptop during the starters and go through her three points while there is still time.",
+       why:"It turns a shared meal into a working session and tells the host that only the company interests her. She is likely to get short answers and a cooler afternoon."},
+      {tier:"ok", text:"Wait for a pause and ask whether they might look at one point over coffee.",
+       why:"Courteous, and a little early. It works, though it tells the table that she has been waiting rather than taking part."},
+      {tier:"poor", text:"Skip the dessert and the coffee, thanking him warmly, so as to get back to the office.",
+       why:"She leaves at precisely the moment the business conversation was about to start. In this setting the host usually turns to business over coffee."},
+      {tier:"best", text:"Take part in the conversation, and raise her points when the host turns to business.",
+       why:"The meal is where the relationship is built and the host decides when it becomes a negotiation — usually with the coffee. Waiting is not passivity here; it is knowing how the sequence works."}
+    ]
+  },
+  {
+    name:"Tyler Brooks", role:"Junior consultant", place:"Rotterdam, Netherlands", tag:"Review",
+    scene:"Tyler hands his report to Bas, his Dutch manager. Bas reads two pages and says, in front of two colleagues: “No, this doesn't work. The analysis is weak and section two needs rewriting.” Tyler is stunned — nobody has ever spoken to him like that at work.",
+    ask:"What should Tyler do?",
+    options:[
+      {tier:"best", text:"Ask Bas which part to rewrite first, and get to work.",
+       why:"Dutch directness is aimed at the work, not at the person, and no insult was intended or perceived by anyone else in the room. A practical follow-up question is exactly the expected response — and it gets him a better report."},
+      {tier:"poor", text:"Apologise several times and ask whether his position is at risk.",
+       why:"It turns an ordinary correction into a crisis. Bas, who thought he was giving useful information, now has to manage an emotional situation he did not create."},
+      {tier:"ok", text:"Take the notes without reacting, then ask Bas privately whether there is a bigger problem with his work.",
+       why:"Sensible. Checking rather than assuming costs a few minutes and no damage, though the answer will almost certainly be that section two is the whole of it."},
+      {tier:"poor", text:"Tell a colleague afterwards that Bas humiliated him in front of the team.",
+       why:"It converts a comment about section two into a conflict about respect. The colleague will be puzzled, and the report still needs rewriting."}
+    ]
+  }
+];
+
+const PTS = {best:2, ok:1, poor:0};
+const LABEL = {best:"Best answer", ok:"Workable", poor:"This will cost you"};
+let order = [], idx = 0, score = 0, answers = [], locked = false;
+
+function shuffle(a){ a=a.slice(); for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]];} return a; }
+
+function drawMeter(){
+  document.getElementById('clips').innerHTML =
+    QUESTIONS.map((_,i)=>`<span class="clip ${i<answers.length?'on':''}"></span>`).join('');
+  document.getElementById('tally').innerHTML = `${score} <span>/ 10</span>`;
+}
+
+function renderQuestion(){
+  locked=false;
+  const q = QUESTIONS[idx];
+  const opts = order[idx];
+  drawMeter();
+  document.getElementById('stage').innerHTML = `
+    <section class="card">
+      <div class="badge">
+        <div class="band"><b>${q.tag}</b><span class="hole"></span></div>
+        <div class="who"><strong>${q.name}</strong><em>${q.role} · ${q.place}</em></div>
+      </div>
+      <div class="body">
+        <p class="scene">${q.scene}</p>
+        <p class="ask">${q.ask}</p>
+        <ul class="opts">
+          ${opts.map((o,i)=>`<li><button class="opt" data-i="${i}">${o.text}</button></li>`).join('')}
+        </ul>
+        <div id="slot"></div>
+      </div>
+    </section>`;
+  document.querySelectorAll('.opt').forEach(b=>b.addEventListener('click',()=>answer(+b.dataset.i)));
+}
+
+function answer(i){
+  if(locked) return; locked=true;
+  const q=QUESTIONS[idx], opts=order[idx], chosen=opts[i];
+  const bestOpt = opts.find(o=>o.tier==='best');
+  score += PTS[chosen.tier];
+  answers.push({q, chosen, opts});
+  document.querySelectorAll('.opt').forEach((b,j)=>{
+    b.disabled=true;
+    if(j===i){ b.classList.add('chosen', chosen.tier); } else { b.classList.add('dim'); }
+  });
+  const last = idx === QUESTIONS.length-1;
+  document.getElementById('slot').innerHTML = `
+    <div class="verdict ${chosen.tier}">
+      <div class="line">${LABEL[chosen.tier]} · +${PTS[chosen.tier]}</div>
+      <p>${chosen.why}</p>
+      ${chosen.tier==='best' ? '' : `<div class="also"><strong>Best answer:</strong> ${bestOpt.text}</div>`}
+    </div>
+    <button class="go" id="go">${last?'See my results':'Next situation'}</button>`;
+  drawMeter();
+  document.getElementById('go').addEventListener('click',()=>{
+    if(last){ renderResults(); } else { idx++; renderQuestion(); window.scrollTo({top:0,behavior:'smooth'}); }
+  });
+}
+
+function verdictText(s){
+  if(s>=9) return "You read each situation on its own terms rather than applying one rule to all five. Look at the review below anyway: the interesting part is why the second-best answer is only second.";
+  if(s>=6) return "A solid result. Your losses are probably clustered in one place — either waiting to be invited, or treating a direct remark as an attack. Find which, in the review below.";
+  if(s>=3) return "You went for the polite, cautious option most of the time. It is rarely catastrophic and rarely the best: in several of these situations, the confident move is the courteous one.";
+  return "Work through the review below. In each case, ask what the other people were expecting someone to do — the answer is usually simpler and more direct than it looks.";
+}
+
+function renderResults(){
+  drawMeter();
+  document.getElementById('stage').innerHTML = `
+    <section class="card"><div class="body" style="padding-top:26px">
+      <div class="final">
+        <p class="headline">${score} <span>/ 10</span></p>
+        <p class="verdictline">${verdictText(score)}</p>
+      </div>
+      ${answers.map(a=>`
+        <div class="rev">
+          <h3>${a.q.name}</h3>
+          <p class="place">${a.q.role} · ${a.q.place}</p>
+          <ul>${['best','ok','poor'].flatMap(t=>a.opts.filter(o=>o.tier===t)).map(o=>`
+            <li class="${o.tier} ${o===a.chosen?'picked':''}">
+              <b>${LABEL[o.tier]}</b>${o.text}<em>${o.why}</em>
+            </li>`).join('')}</ul>
+        </div>`).join('')}
+      <button class="go quiet" id="again">Start again</button>
+    </div></section>`;
+  document.getElementById('again').addEventListener('click',start);
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function start(){
+  order = QUESTIONS.map(q=>shuffle(q.options));
+  idx=0; score=0; answers=[];
+  renderQuestion();
+}
+start();
+</script>
+</body>
+</html>
